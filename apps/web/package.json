@@ -25,7 +25,7 @@
     "clsx": "^2.1.1",
     "dodopayments": "^2.61.1",
     "lucide-react": "^1.70.0",
-    "next": "^15.5.28",
+    "next": "^16.4.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "server-only": "^0.0.1",
