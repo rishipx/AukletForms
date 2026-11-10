@@ -1,0 +1,51 @@
+name = "auklet-worker"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# Route the public ingestion API through your own domain once it is on Cloudflare, e.g.:
+# routes = [{ pattern = "api.auklet.dev/*", zone_name = "auklet.dev" }]
+
+[observability]
+enabled = true
+
+# Edit these two values for your deployment (they are not secrets).
+[vars]
+SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co"
+# Must be a sender on a domain you verified in Resend.
+EMAIL_FROM = "Auklet Forms <forms@notify.auklet.dev>"
+# Optional: where native HTML form posts land when a form has no redirect_url.
+# Defaults to the Worker's own /thanks page.
+# THANK_YOU_URL = "https://auklet.dev/thanks"
+# Optional: seconds to cache a form's config in KV (minimum 60).
+# FORM_CACHE_TTL_SECONDS = "60"
+
+# Create with:  npx wrangler kv namespace create FORM_CACHE
+# then paste the printed id below.
+[[kv_namespaces]]
+binding = "FORM_CACHE"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Daily maintenance: retention purge + keeps a free Supabase project from pausing (03:17 UTC).
+[triggers]
+crons = ["17 3 * * *"]
+
+# Optional: cap notification emails per UTC day. Resend's free plan sends 100 a day in total.
+# EMAIL_DAILY_GLOBAL_CAP = "90"   # across all forms
+# EMAIL_DAILY_FORM_CAP = "25"     # per form
+# Submissions over the cap are still stored (marked "email skipped" in the dashboard).
+
+# Optional per-IP rate limit, checked before any database work. Needs Wrangler 4.36 or newer.
+# Counts are per Cloudflare location and approximate. Uncomment both blocks, then redeploy.
+# [[ratelimits]]
+# name = "RATE_LIMITER"
+# namespace_id = "2001"   # any integer unique within your Cloudflare account
+#
+#   [ratelimits.simple]
+#   limit = 10            # submissions allowed ...
+#   period = 60           # ... per IP address and form per 60 seconds (must be 10 or 60)
+
+# Secrets are NOT stored in this file. Set them with:
+#   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put TURNSTILE_ENC_KEY   # same value as the dashboard's; openssl rand -base64 32
+# For local dev, put them in .dev.vars (see .dev.vars.example).

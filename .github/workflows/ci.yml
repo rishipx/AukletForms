@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  format:
+    name: formatting
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+
+  workers:
+    name: ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [worker, selfhost-worker]
+    defaults:
+      run:
+        working-directory: apps/${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/${{ matrix.app }}/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/web
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      # Dummy values: the build only needs them to exist, nothing contacts these services.
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-dummy-key
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm test
+      # `next build` generates next-env.d.ts, which the typecheck needs, so it runs first.
+      - run: npm run build
+      - run: npm run typecheck
+
+  database:
+    name: database (pgTAP)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase start
+      - run: supabase test db
+
+  # Runs the real Worker (workerd) against a small Supabase stand-in. Fast, needs no Docker.
+  smoke:
+    name: worker smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: apps/worker/package-lock.json
+      - run: npm ci
+        working-directory: apps/worker
+      - name: Start the mock Supabase and the Worker
+        working-directory: apps/worker
+        run: |
+          node ../../scripts/mock-supabase.mjs 54399 &
+          npx wrangler dev --port 8787 \
+            --var SUPABASE_URL:http://127.0.0.1:54399 \
+            --var SUPABASE_SERVICE_ROLE_KEY:sb_secret_local \
+            --var RESEND_API_KEY:re_fake > "$RUNNER_TEMP/wrangler.log" 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8787/healthz && break; sleep 1; done
+      - run: node scripts/smoke.mjs
+      - if: failure()
+        run: cat "$RUNNER_TEMP/wrangler.log"

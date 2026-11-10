@@ -1,0 +1,39 @@
+name = "auklet-forms"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[observability]
+enabled = true
+
+# ---------------------------------------------------------------------------
+# Settings you can change. Secrets (RESEND_API_KEY, TO_EMAIL) are NOT here:
+# the Deploy button prompts for them from .dev.vars.example, and for the CLI
+# you set them with `npx wrangler secret put`.
+# ---------------------------------------------------------------------------
+[vars]
+# Sender shown on notification emails. The default only works for testing: Resend
+# will deliver it solely to the address you signed up to Resend with. For real use,
+# verify your own domain in Resend and change this, e.g. "Website <forms@yourdomain.com>".
+FROM_EMAIL = "Auklet Forms <onboarding@resend.dev>"
+
+# Which websites may submit from a browser. Comma-separated, e.g.
+#   "yourdomain.com, *.yourdomain.com, localhost:3000"
+# Empty accepts submissions from any website (fine for a first test, not for production).
+ALLOWED_ORIGINS = ""
+
+# Optional, uncomment to use:
+# REDIRECT_URL = "https://yourdomain.com/thanks"   # where plain HTML form posts land afterwards
+# SUBJECT = "New message from my website"          # email subject line
+
+# ---------------------------------------------------------------------------
+# Optional per-IP rate limiting (strongly recommended for production).
+# Needs Wrangler 4.36 or newer. Counts are per Cloudflare location and approximate.
+# Uncomment both blocks below, then redeploy. See the README, "Harden it".
+# ---------------------------------------------------------------------------
+# [[ratelimits]]
+# name = "RATE_LIMITER"
+# namespace_id = "1001"   # any integer unique within your Cloudflare account
+#
+#   [ratelimits.simple]
+#   limit = 10            # submissions allowed ...
+#   period = 60           # ... per IP address per 60 seconds (must be 10 or 60)

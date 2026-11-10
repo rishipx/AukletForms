@@ -1,0 +1,20 @@
+{
+  "name": "auklet-forms",
+  "version": "1.0.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "description": "Form endpoints for developers: ingestion Worker, dashboard, database and self-host edition.",
+  "scripts": {
+    "install:all": "npm ci --prefix apps/worker && npm ci --prefix apps/web && npm ci --prefix apps/selfhost-worker",
+    "test": "npm test --prefix apps/worker && npm test --prefix apps/web && npm test --prefix apps/selfhost-worker",
+    "typecheck": "npm run typecheck --prefix apps/worker && npm run typecheck --prefix apps/web && npm run typecheck --prefix apps/selfhost-worker",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

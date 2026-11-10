@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `wrangler dev`. Never commit .dev.vars.
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-or-secret-key
+RESEND_API_KEY=re_your_resend_api_key
+# Only needed if forms use Turnstile. Must match the dashboard's value: openssl rand -base64 32
+# TURNSTILE_ENC_KEY=

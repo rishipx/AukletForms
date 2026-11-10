@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.open-next/
+.wrangler/
+dist/
+package-lock.json
+next-env.d.ts
+
+# Markdown tables and SQL are formatted by hand
+*.md
+*.sql
+supabase/config.toml

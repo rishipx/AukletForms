@@ -1,0 +1,24 @@
+{
+  "name": "auklet-worker",
+  "version": "1.0.0",
+  "private": true,
+  "license": "GPL-3.0-only",
+  "description": "Auklet Forms edge ingestion gateway (Cloudflare Worker)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "tail": "wrangler tail --format pretty"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261019.1",
+    "typescript": "^5.6.0",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,4 @@
+# The Deploy to Cloudflare button prompts for these two values.
+# For local development, copy this file to .dev.vars and fill them in. Never commit .dev.vars.
+RESEND_API_KEY=re_your_resend_api_key
+TO_EMAIL=you@example.com

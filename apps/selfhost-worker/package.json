@@ -1,0 +1,33 @@
+{
+  "name": "auklet-forms-selfhost",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hostable form-to-email endpoint for Cloudflare Workers. Honeypot spam trap, CORS allow-list, Resend delivery. Single file, no database.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261019.1",
+    "typescript": "^5.6.0",
+    "vitest": "^5.0.5",
+    "wrangler": "^4.0.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "RESEND_API_KEY": {
+        "description": "Your [Resend](https://resend.com/api-keys) API key (starts with `re_`). Create one with \"Sending access\"."
+      },
+      "TO_EMAIL": {
+        "description": "Where submissions are delivered. One address, or up to 10 separated by commas. While testing with the default sender, this must be the email you signed up to Resend with."
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

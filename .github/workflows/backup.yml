@@ -1,0 +1,67 @@
+name: Database backup
+
+# Weekly encrypted dump of your Supabase database. The free Supabase plan has no backups.
+# Setup (once): repo Settings > Secrets and variables > Actions, add
+#   SUPABASE_DB_URL     the "Session pooler" connection string (IPv4; the direct host is IPv6-only
+#                       and GitHub runners cannot reach it). Project Settings > Database.
+#   BACKUP_PASSPHRASE   any long random string. Keep a copy somewhere safe: without it the backup
+#                       cannot be opened.
+# Note: GitHub switches scheduled workflows off after 60 days without repository activity.
+
+on:
+  schedule:
+    - cron: '23 4 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check secrets
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          test -n "$DB_URL" || { echo "::error::SUPABASE_DB_URL secret is not set"; exit 1; }
+          test -n "$PASS" || { echo "::error::BACKUP_PASSPHRASE secret is not set"; exit 1; }
+
+      # pg_dump must be at least as new as the server, so install the current client from PostgreSQL's own repository.
+      - name: Install PostgreSQL 17 client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl ca-certificates
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Dump
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir out
+          # Your data: forms, submissions, profiles, billing state.
+          pg_dump "$DB_URL" --no-owner --no-privileges --schema=public --format=custom --file=out/public.dump
+          # Login accounts, so profiles can be re-linked after a restore.
+          pg_dump "$DB_URL" --no-owner --no-privileges --data-only --table=auth.users --table=auth.identities --file=out/auth.sql
+          ls -l out
+
+      - name: Encrypt
+        env:
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          tar -C out -cf - . | openssl enc -aes-256-cbc -pbkdf2 -iter 600000 -salt -pass env:PASS -out "auklet-backup-$(date -u +%Y%m%d).tar.enc"
+          rm -rf out
+          ls -l
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: auklet-backup
+          path: auklet-backup-*.tar.enc
+          retention-days: 30
+          if-no-files-found: error

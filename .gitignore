@@ -1,0 +1,32 @@
+# Dependencies and build output
+node_modules/
+.next/
+.open-next/
+dist/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local secrets and configuration (only the *.example templates are committed)
+.env
+.env.local
+.env.*.local
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Tooling state
+.wrangler/
+supabase/.temp/
+supabase/.branches/
+
+# Backups and logs
+*.tar.enc
+*.dump
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

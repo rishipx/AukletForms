@@ -1,0 +1,10 @@
+# Cloudflare deployment only. Copy to .dev.vars for `npm run cf:preview` (never commit .dev.vars).
+# On the deployed Worker, set the same names as secrets: npx wrangler secret put NAME
+# NEXT_PUBLIC_* values are baked in at build time, so keep them in .env.local (or the CI environment) when you build.
+SUPABASE_SERVICE_ROLE_KEY=
+TURNSTILE_ENC_KEY=
+DODO_PAYMENTS_ENVIRONMENT=test_mode
+DODO_PAYMENTS_API_KEY=
+DODO_PAYMENTS_WEBHOOK_KEY=
+DODO_PRODUCT_PRO=
+DODO_PRODUCT_AGENCY=
