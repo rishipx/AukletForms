@@ -13,7 +13,7 @@ Only the `*.example` templates are committed. Real values live in `.env.local` /
 | `NEXT_PUBLIC_SITE_URL` | No | Public URL of the dashboard (login links, billing return URLs). Baked in at build time. |
 | `NEXT_PUBLIC_INGEST_URL` | No | Base URL of the ingestion Worker, used in the copy-paste snippets. Baked in at build time. |
 | `SUPABASE_SERVICE_ROLE_KEY` | **Yes** | Server-side only. Bypasses Row Level Security. |
-| `TURNSTILE_ENC_KEY` | **Yes** | Base64 of 32 bytes (`openssl rand -base64 32`). Must equal the Worker's value. |
+| `TURNSTILE_ENC_KEY` | **Yes** | Base64 of 32 bytes (`node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`). Must equal the Worker's value. |
 | `DODO_PAYMENTS_API_KEY` | **Yes** | Billing is optional, but these four must be set together. |
 | `DODO_PAYMENTS_WEBHOOK_KEY` | **Yes** | Signing key of the webhook endpoint. |
 | `DODO_PRODUCT_PRO`, `DODO_PRODUCT_AGENCY` | No | Subscription product ids (`pdt_...`). |

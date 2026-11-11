@@ -105,3 +105,16 @@ export function curlSnippet({ endpoint }: SnippetOptions): string {
     '  -d \'{"name":"Ada Lovelace","email":"ada@example.com","message":"Hello from curl"}\'',
   ].join('\n');
 }
+
+/** PowerShell's line-continuation character. */
+const BACKTICK = '`';
+
+/** Windows PowerShell treats `curl` as an alias of Invoke-WebRequest, so it gets its own snippet. */
+export function powershellSnippet({ endpoint }: SnippetOptions): string {
+  return [
+    `Invoke-RestMethod -Method Post -Uri '${endpoint}' ${BACKTICK}`,
+    `  -ContentType 'application/json' ${BACKTICK}`,
+    `  -Headers @{ Accept = 'application/json' } ${BACKTICK}`,
+    '  -Body \'{"name":"Ada Lovelace","email":"ada@example.com","message":"Hello from PowerShell"}\'',
+  ].join('\n');
+}

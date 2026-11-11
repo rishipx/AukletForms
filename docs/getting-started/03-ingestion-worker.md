@@ -31,8 +31,10 @@ id = "THE_ID_PRINTED_ABOVE"
 Generate the key that encrypts forms' Turnstile secrets. **Save it somewhere safe and use the same value in the dashboard ([guide 4](./04-dashboard-local.md)).** If it is lost, saved Turnstile secrets cannot be recovered and must be entered again:
 
 ```bash
-openssl rand -base64 32
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
+
+The same command works on macOS, Linux and Windows. (`openssl rand -base64 32` is equivalent if you have OpenSSL.)
 
 Set the secrets (paste each value when prompted) and deploy:
 
@@ -63,6 +65,21 @@ curl $WORKER/healthz
 curl -i -X POST $WORKER/v1/f/00000000-0000-4000-8000-000000000000 \
   -H 'Content-Type: application/json' -d '{"a":1}'
 # HTTP 404 with "type":".../not-found"
+```
+
+On Windows PowerShell:
+
+```powershell
+$WORKER = "https://auklet-worker.YOUR-NAME.workers.dev"
+
+curl.exe $WORKER/healthz
+# {"ok":true}
+
+try {
+  Invoke-RestMethod -Method Post -Uri "$WORKER/v1/f/00000000-0000-4000-8000-000000000000" `
+    -ContentType 'application/json' -Body '{"a":1}'
+} catch { $_.Exception.Response.StatusCode.value__ }
+# 404
 ```
 
 The second call proves the Worker can read your database: **404 is correct** because that form does not exist. A **503** means the Worker cannot reach Supabase, so re-check `SUPABASE_URL` and the secret key. A **500 server-misconfigured** means a secret is missing. `npx wrangler tail` shows the logs.

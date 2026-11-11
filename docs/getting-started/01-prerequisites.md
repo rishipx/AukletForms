@@ -25,6 +25,13 @@ Afterwards, read [Operations](../operations.md) to keep the project running on f
 
 The Supabase and Wrangler command-line tools need no install: use `npx supabase ...` and `npx wrangler ...`.
 
+### Windows
+
+Everything works on Windows 10 and 11 using the terminal inside VS Code (PowerShell). The guides show bash commands first and give a PowerShell equivalent wherever it differs: copying files (`Copy-Item`), calling the API (`Invoke-RestMethod` or `curl.exe`) and generating keys (a Node one-liner, because Windows has no `openssl`). Two things to know:
+
+- In PowerShell, `curl` is an alias for a different command. Type `curl.exe`, or use `Invoke-RestMethod`.
+- The Cloudflare build of the dashboard (OpenNext) prints a warning that Windows is not fully supported. In practice it builds and deploys fine; if you ever see odd failures there, run the same command in WSL.
+
 ## Create free accounts
 
 | Service | Used for | Site |

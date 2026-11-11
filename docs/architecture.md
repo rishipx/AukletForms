@@ -17,7 +17,7 @@
 | Path | Role | Runs on |
 | --- | --- | --- |
 | [`apps/worker`](../apps/worker) | Public ingestion API `POST /v1/f/:formId`: rate limit, CORS, honeypot, Turnstile, quota, email, Slack and Discord, daily maintenance | Cloudflare Workers |
-| [`apps/web`](../apps/web) | Dashboard: magic-link login, forms, live submissions, CSV export, billing | Next.js 15 on Cloudflare Workers (or Vercel) |
+| [`apps/web`](../apps/web) | Dashboard: magic-link login, forms, live submissions, CSV export, billing | Next.js 16 on Cloudflare Workers (or Vercel) |
 | [`apps/selfhost-worker`](../apps/selfhost-worker) | Open-source, single-file, database-free edition (AGPL-3.0) | Cloudflare Workers |
 | [`supabase`](../supabase) | Schema, Row Level Security, atomic quota, email budget, retention, pgTAP tests | Supabase (Postgres) |
 | [`scripts`](../scripts) | Mock Supabase API and the end-to-end smoke test | Node.js |

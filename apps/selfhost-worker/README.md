@@ -11,7 +11,7 @@
 - **Reliable by design**: it waits for Resend to accept the email and tells the visitor if it could not, instead of losing the message silently.
 - **Works with plain HTML forms and JavaScript**: JSON, `multipart/form-data` and `application/x-www-form-urlencoded`.
 
-> Want submissions stored in a dashboard and relayed to Slack or Discord, with bot protection and zero DNS setup? That is [Auklet Cloud](https://auklet.dev). See [the comparison](#self-hosted-vs-auklet-cloud).
+> Want submissions stored in a dashboard and relayed to Slack or Discord, with bot protection and zero DNS setup? That is the hosted edition: the dashboard and ingestion Worker in the [main repository](../../README.md). See [the comparison](#self-hosted-vs-the-hosted-edition).
 
 ---
 
@@ -156,11 +156,11 @@ Being a single file with no database, it deliberately leaves these out:
 - **One recipient configuration per deployment.** For several sites with different recipients, deploy one Worker per site.
 - **No usage quotas or billing.**
 
-If you need those, that is what Auklet Cloud is for.
+If you need those, that is what the hosted edition is for.
 
-## Self-hosted vs Auklet Cloud
+## Self-hosted vs the hosted edition
 
-| | **Self-hosted** (this repo) | **[Auklet Cloud](https://auklet.dev)** |
+| | **Self-hosted** (this repo) | **[Hosted edition](../../README.md)** |
 | --- | --- | --- |
 | Setup | Deploy the Worker, create a Resend account, set secrets | Sign up, create a form, paste the endpoint |
 | DNS and email domain | You verify a sending domain in Resend (SPF and DKIM records) to send from your own address | **Zero DNS setup.** Nothing to verify or configure |
@@ -174,7 +174,7 @@ If you need those, that is what Auklet Cloud is for.
 | Cost | Free software, you pay your own Cloudflare and Resend usage | Free plan, then subscription |
 | Source | AGPL-3.0 | Hosted service |
 
-Self-hosting is a perfectly good choice for one personal site. Auklet Cloud saves the setup and upkeep once you have more than one form, more than one client, or want a record of what came in. [Start free at auklet.dev](https://auklet.dev). Nothing here locks you in: Auklet Cloud endpoints use the same paths and request format (`POST /v1/f/<id>`), so switching in either direction means changing one URL.
+Self-hosting is a perfectly good choice for one personal site. The hosted edition saves the setup and upkeep once you have more than one form, more than one client, or want a record of what came in. [See the main repository](../../README.md). Nothing here locks you in: hosted-edition endpoints use the same paths and request format (`POST /v1/f/<id>`), so switching in either direction means changing one URL.
 
 ## Contributing
 

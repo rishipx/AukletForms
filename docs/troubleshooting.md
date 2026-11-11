@@ -3,7 +3,7 @@
 | Symptom | Likely cause and fix |
 | --- | --- |
 | `supabase test db` fails | Read the failing assertion's name and the error. Make sure Docker is running and you ran `db reset` first. |
-| Magic link never arrives | Built-in email limit: wait and retry. Check spam. Confirm Email is enabled in Supabase Auth. |
+| Magic link never arrives | Built-in email limit: wait and retry. Check spam. Confirm Email is enabled in Supabase Auth. For anyone other than you, set up custom SMTP with a verified domain ([Deploy the dashboard](./getting-started/06-deploy-dashboard.md#before-you-share-the-link-publicly)). |
 | Link opens but returns to login with an error | Open it in the same browser you requested it from; confirm the redirect URL is listed in Supabase. |
 | Worker returns **503** | Cannot reach Supabase: wrong `SUPABASE_URL` / secret key, or the project is paused. |
 | Worker returns **500 server-misconfigured** | A secret or var is missing. `npx wrangler tail` shows which. |
@@ -15,6 +15,10 @@
 | "Billing is not configured" | `DODO_PAYMENTS_API_KEY` or the product ids are missing, or the server was not restarted. |
 | "Manage Subscription" or checkout errors | A test-mode key used with `DODO_PAYMENTS_ENVIRONMENT=live_mode` (or the reverse) is rejected. Keep them matching. Check the server log for the Dodo status code. |
 | Plan does not change after paying | The webhook did not arrive or failed. Check that the tunnel is running and the endpoint URL is current (free tunnels change URL on restart), then the endpoint's delivery log in Dodo. A `500` with "unknown product" in the server log means `DODO_PRODUCT_*` does not match the product that was bought. |
+| `npm run build` or `cf:build` fails with "Missing NEXT_PUBLIC_SUPABASE_URL" | The `NEXT_PUBLIC_*` values are read at build time. Create `apps/web/.env.local`, or for a throwaway test build set dummy values (PowerShell: `$env:NEXT_PUBLIC_SUPABASE_URL="https://example.supabase.co"`, `$env:NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy"`, `$env:NEXT_PUBLIC_SITE_URL="http://localhost:3000"`). |
+| `npm run dev` says "Port 3000 is in use" or "Another next dev server is already running" | An earlier dev server is still running. Stop it (`taskkill /PID <pid> /F` on Windows, as the message suggests) and start again. The magic link only works on the port set in Supabase, normally 3000. |
+| PowerShell: "A parameter cannot be found that matches parameter name 'X'" when running a curl snippet | `curl` is an alias for `Invoke-WebRequest` in Windows PowerShell. Use the **PowerShell** tab of the form's Integration page, or type `curl.exe` and avoid bash line breaks. |
+| `git pull` refuses because `package-lock.json` changed | Running `npm install` rewrote the lockfile. Discard that change (`git checkout -- apps/web/package-lock.json`) and pull again; use `npm ci` instead of `npm install` to avoid it. |
 | Dashboard will not start: "Invalid environment" | The message lists exactly what is missing or malformed (for example half-configured billing, or a `TURNSTILE_ENC_KEY` that is not base64 of 32 bytes). Fix and restart. |
 | Turnstile form returns **503** | The Worker cannot decrypt the stored secret: `TURNSTILE_ENC_KEY` is missing or differs from the dashboard's. Set the same value on both. |
 | Saving a form with Turnstile says the key is not set | Set `TURNSTILE_ENC_KEY` for the dashboard ([Dashboard](./getting-started/04-dashboard-local.md)) and restart. |

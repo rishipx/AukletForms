@@ -36,8 +36,13 @@ You are already logged in to Wrangler from [guide 3](./03-ingestion-worker.md).
    ```bash
    npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
    npx wrangler secret put TURNSTILE_ENC_KEY
+   ```
+
+   **Billing is optional.** With none of the Dodo variables set, the dashboard runs without billing, so you can deploy and test everything first. To turn billing on, set all five together (the dashboard refuses a half-configured setup) after creating the webhook endpoint in step 5:
+
+   ```bash
    npx wrangler secret put DODO_PAYMENTS_API_KEY
-   npx wrangler secret put DODO_PAYMENTS_WEBHOOK_KEY      # a placeholder for now, replaced in step 5
+   npx wrangler secret put DODO_PAYMENTS_WEBHOOK_KEY
    npx wrangler secret put DODO_PRODUCT_PRO
    npx wrangler secret put DODO_PRODUCT_AGENCY
    npx wrangler secret put DODO_PAYMENTS_ENVIRONMENT      # type: test_mode
@@ -49,6 +54,15 @@ You are already logged in to Wrangler from [guide 3](./03-ingestion-worker.md).
 7. **Check CPU time.** Free Workers get 10 ms of CPU per request, and server-rendering a Next.js page can exceed it (Cloudflare error 1102). Open the dashboard, a form page and Settings several times, then check **Workers & Pages > auklet-web > Metrics** for CPU time and errors. If pages fail or sit near the limit, use the fallback below or Cloudflare's paid Workers plan.
 
 To redeploy after a change, run `npm run cf:deploy` again. Secrets persist between deploys.
+
+## Before you share the link publicly
+
+Supabase's built-in email service is meant for trying things out: it is heavily rate limited and, on current projects, only delivers to addresses on your own Supabase team. A stranger who tries to sign up may never receive a magic link. Check in a private window with an address that is not yours. If it does not arrive:
+
+1. In Resend, verify your domain (**Domains > Add Domain**) and add the DNS records it shows.
+2. In Supabase, open **Authentication > Emails > SMTP Settings**, turn on custom SMTP and enter Resend's SMTP details (host `smtp.resend.com`, user `resend`, your API key as the password, and a sender on the verified domain).
+3. Change `EMAIL_FROM` in `apps/worker/wrangler.toml` to an address on that domain and redeploy the Worker, so form notifications can reach any recipient too.
+4. Retest with a second address.
 
 ## Fallback: Vercel
 

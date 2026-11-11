@@ -2,7 +2,7 @@
 
 import { CopyButton } from '@/components/shared/copy-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { curlSnippet, htmlSnippet, reactSnippet } from '@/lib/forms/snippets';
+import { curlSnippet, htmlSnippet, powershellSnippet, reactSnippet } from '@/lib/forms/snippets';
 
 function CodeBlock({ code, label }: { code: string; label: string }) {
   return (
@@ -41,6 +41,7 @@ export function IntegrationSnippets({ endpoint, turnstile }: { endpoint: string;
           <TabsTrigger value="html">HTML</TabsTrigger>
           <TabsTrigger value="react">Next.js / React</TabsTrigger>
           <TabsTrigger value="curl">curl</TabsTrigger>
+          <TabsTrigger value="powershell">PowerShell</TabsTrigger>
         </TabsList>
         <TabsContent value="html">
           <CodeBlock code={htmlSnippet(options)} label="HTML snippet" />
@@ -50,6 +51,9 @@ export function IntegrationSnippets({ endpoint, turnstile }: { endpoint: string;
         </TabsContent>
         <TabsContent value="curl">
           <CodeBlock code={curlSnippet(options)} label="curl command" />
+        </TabsContent>
+        <TabsContent value="powershell">
+          <CodeBlock code={powershellSnippet(options)} label="PowerShell command" />
         </TabsContent>
       </Tabs>
 

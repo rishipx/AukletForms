@@ -110,7 +110,7 @@ describe('successful delivery', () => {
     expect(text).toContain('"attached":false');
   });
 
-  it('accepts the Auklet Cloud path so snippets keep working after swapping the host', async () => {
+  it('accepts the hosted edition path so snippets keep working after swapping the host', async () => {
     const res = await send(jsonPost({ a: 1 }, {}, '/v1/f/11111111-1111-4111-8111-111111111111'));
     expect(res.status).toBe(200);
   });

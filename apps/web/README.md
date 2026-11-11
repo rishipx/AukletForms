@@ -1,6 +1,6 @@
 # Auklet dashboard
 
-The Auklet Forms dashboard: Next.js 15 (App Router), TypeScript, Tailwind CSS v4, Supabase Auth (magic link) and Realtime, and Dodo Payments billing. It runs on Cloudflare Workers through OpenNext, and unchanged on Vercel.
+The Auklet Forms dashboard: Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Supabase Auth (magic link) and Realtime, and Dodo Payments billing. It runs on Cloudflare Workers through OpenNext, and unchanged on Vercel.
 
 ## Features
 
@@ -70,5 +70,5 @@ In the Supabase dashboard (**Authentication**):
 
 ## Notes
 
-- TypeScript is pinned to 5.x because Next 15 loads `next.config.ts` through the TypeScript API, which TypeScript 7 does not provide.
+- TypeScript stays on 5.x in this app: TypeScript 7 has not been verified with the Next.js and OpenNext toolchain (Dependabot is configured to skip that major bump here). The Workers use TypeScript 7.
 - Form configuration edits reach the ingestion Worker within about a minute (30 s in-isolate memory cache, 60 s KV TTL).

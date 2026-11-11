@@ -4,6 +4,23 @@
   "private": true,
   "license": "GPL-3.0-only",
   "description": "Form endpoints for developers: ingestion Worker, dashboard, database and self-host edition.",
+  "author": "rishipx",
+  "homepage": "https://github.com/rishipx/AukletForms#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishipx/AukletForms.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rishipx/AukletForms/issues"
+  },
+  "keywords": [
+    "forms",
+    "form-backend",
+    "cloudflare-workers",
+    "nextjs",
+    "supabase",
+    "self-hosted"
+  ],
   "scripts": {
     "install:all": "npm ci --prefix apps/worker && npm ci --prefix apps/web && npm ci --prefix apps/selfhost-worker",
     "test": "npm test --prefix apps/worker && npm test --prefix apps/web && npm test --prefix apps/selfhost-worker",

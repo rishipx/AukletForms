@@ -2,7 +2,7 @@
 
 ```bash
 cd apps/web
-cp .env.example .env.local
+cp .env.example .env.local          # PowerShell: Copy-Item .env.example .env.local
 ```
 
 Fill in `.env.local` (leave the Dodo lines for [guide 5](./05-billing.md)):
@@ -28,7 +28,7 @@ Open <http://localhost:3000>:
 
 1. **Sign in.** Enter your email, click **Send Magic Link**, open the email and click the link **in the same browser**. **Expect:** the dashboard with "Create your first form".
 2. **Create a form.** Click **Create New Form** and name it anything. For **Notification email** use **the email you signed up to Resend with**. Leave Allowed domains empty. **Expect:** the form page opens on the Integration tab with your endpoint and snippets.
-3. **Send a submission.** Copy the **curl** snippet and run it. **Expect:** `{"success":true,"id":"..."}`.
+3. **Send a submission.** On the form's **Integration** tab, copy the **curl** snippet (macOS, Linux) or the **PowerShell** snippet (Windows) and run it. **Expect:** `{"success":true,"id":"..."}`.
 4. **Check the three results:**
    - an email arrives (check spam). Its Reply-To is the `email` field you sent;
    - the **Submissions** tab shows the row **without refreshing**, with a green **Live** dot;

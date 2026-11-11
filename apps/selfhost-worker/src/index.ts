@@ -5,7 +5,7 @@
  * an email. No database, no accounts, no dependencies.
  *
  *   POST /                 (also accepted: POST /v1/f/<anything>, so snippets
- *                           written for Auklet Cloud work after swapping the host)
+ *                           written for the hosted edition work after swapping the host)
  *   GET  /thanks           built-in thank-you page for plain HTML form posts
  *   GET  /healthz          liveness check
  *
