@@ -10,9 +10,9 @@ enabled = true
 
 # Edit these two values for your deployment (they are not secrets).
 [vars]
-SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co"
+SUPABASE_URL = "https://zsqhwystwqhiooqujikd.supabase.co"
 # Must be a sender on a domain you verified in Resend.
-EMAIL_FROM = "Auklet Forms <forms@notify.auklet.dev>"
+EMAIL_FROM = "Auklet Forms <onboarding@resend.dev>"
 # Optional: where native HTML form posts land when a form has no redirect_url.
 # Defaults to the Worker's own /thanks page.
 # THANK_YOU_URL = "https://auklet.dev/thanks"
@@ -23,7 +23,7 @@ EMAIL_FROM = "Auklet Forms <forms@notify.auklet.dev>"
 # then paste the printed id below.
 [[kv_namespaces]]
 binding = "FORM_CACHE"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "71adc4fb87884411bd040fcbe76af0e5"
 
 # Daily maintenance: retention purge + keeps a free Supabase project from pausing (03:17 UTC).
 [triggers]
