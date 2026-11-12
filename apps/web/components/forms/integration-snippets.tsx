@@ -6,7 +6,7 @@ import { curlSnippet, htmlSnippet, powershellSnippet, reactSnippet } from '@/lib
 
 function CodeBlock({ code, label }: { code: string; label: string }) {
   return (
-    <div className="relative rounded-lg border bg-muted/50">
+    <div className="relative rounded-lg border bg-muted/40">
       <div className="absolute right-2 top-2">
         <CopyButton text={code} />
       </div>
@@ -22,10 +22,10 @@ export function IntegrationSnippets({ endpoint, turnstile }: { endpoint: string;
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold">Your endpoint</h2>
-        <div className="flex items-center gap-2 rounded-lg border bg-card p-2 pl-4">
+        <h2 className="text-sm font-semibold">Endpoint</h2>
+        <div className="flex items-center gap-2 rounded-lg border bg-card p-1.5 pl-4">
           <code className="min-w-0 flex-1 truncate font-mono text-sm" title={endpoint}>
-            POST {endpoint}
+            <span className="text-muted-foreground">POST</span> {endpoint}
           </code>
           <CopyButton text={endpoint} label="Copy URL" />
         </div>

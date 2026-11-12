@@ -8,7 +8,7 @@ export function LogoMark({ className }: { className?: string }) {
         d="M8 21c0-5.2 3.6-9 8.4-9 2.4 0 4.2.9 5.6 2.4L26 13l-1.6 3.6c.1.5.1 1 .1 1.4 0 3.9-3 6.6-7.2 6.6C12.4 24.6 8 24 8 21Z"
         fill="var(--primary-foreground)"
       />
-      <circle cx="19.2" cy="16.2" r="1.3" fill="var(--primary)" />
+      <circle cx="19.2" cy="16.2" r="1.5" fill="var(--signal)" />
     </svg>
   );
 }

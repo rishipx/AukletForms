@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Globe, Inbox, Plus, ShieldCheck } from 'lucide-react';
+import { Globe, Plus, ShieldCheck } from 'lucide-react';
 import { CreateFormDialog } from '@/components/forms/create-form-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageHeader } from '@/components/shared/page-header';
 import { createClient } from '@/lib/supabase/server';
 import type { FormListItem } from '@/lib/types';
 import { formatDateUtc } from '@/lib/utils';
@@ -23,77 +22,74 @@ export default async function DashboardPage() {
 
   if (forms.length === 0) {
     return (
-      <div className="mx-auto mt-16 max-w-md">
-        <Card className="text-center">
-          <CardHeader className="items-center">
-            <div className="mb-2 grid size-12 place-items-center rounded-full bg-accent text-accent-foreground">
-              <Inbox className="size-6" />
-            </div>
-            <CardTitle className="text-xl">Create your first form</CardTitle>
-            <CardDescription>Get an endpoint for your HTML form and have every submission land in your inbox, Slack or Discord.</CardDescription>
-          </CardHeader>
-          <CardContent>
+      <div className="flex flex-col gap-8">
+        <PageHeader title="Forms" description="Each form gets its own endpoint and its own inbox." />
+        <div className="grid gap-8 rounded-xl border bg-card p-6 sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+          <div className="flex flex-col items-start gap-4">
+            <h2 className="text-xl font-semibold">Create your first form</h2>
+            <p className="max-w-sm text-sm text-muted-foreground">
+              Name it, say where submissions should go, and you get an endpoint to post to. Entries arrive by email, Slack or Discord, and show up here live.
+            </p>
             <CreateFormDialog>
               <Button size="lg">
-                <Plus /> Create New Form
+                <Plus /> New form
               </Button>
             </CreateFormDialog>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="min-w-0 rounded-lg border bg-muted/50 p-4" aria-hidden="true">
+            <pre className="overflow-hidden font-mono text-[13px] leading-relaxed text-muted-foreground">
+              <code>
+                {'<form '}
+                <span className="text-foreground">{'action="https://…/v1/f/your-form-id"'}</span>
+                {'\n      method="POST">\n  <input name="email">\n  <textarea name="message"></textarea>\n  <button>Send</button>\n</form>'}
+              </code>
+            </pre>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Forms</h1>
-          <p className="text-sm text-muted-foreground">
-            {forms.length} {forms.length === 1 ? 'form' : 'forms'}
-          </p>
-        </div>
-        <CreateFormDialog />
-      </div>
+      <PageHeader title="Forms" description={`${forms.length} ${forms.length === 1 ? 'form' : 'forms'}`} actions={<CreateFormDialog />} />
 
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="divide-y overflow-hidden rounded-xl border bg-card">
         {forms.map((form) => {
           const count = form.submissions[0]?.count ?? 0;
+          const domains = form.allowed_domains.length;
           return (
-            <li key={form.id}>
-              <Link
-                href={`/dashboard/forms/${form.id}`}
-                className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Card className="h-full transition-colors group-hover:border-ring/60">
-                  <CardHeader>
-                    <CardTitle className="truncate text-base">{form.name}</CardTitle>
-                    <CardDescription className="truncate">{form.target_email}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col gap-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary">
-                        <Globe className="size-3" />
-                        {form.allowed_domains.length === 0
-                          ? 'Any website'
-                          : `${form.allowed_domains.length} ${form.allowed_domains.length === 1 ? 'domain' : 'domains'}`}
-                      </Badge>
-                      {form.enable_turnstile ? (
-                        <Badge variant="success">
-                          <ShieldCheck className="size-3" /> Turnstile
-                        </Badge>
-                      ) : null}
-                    </div>
-                    <div className="flex items-baseline justify-between text-sm">
-                      <span className="text-muted-foreground">Created {formatDateUtc(form.created_at)}</span>
-                      <span className="tabular-nums">
-                        <span className="font-semibold">{count.toLocaleString('en-US')}</span>{' '}
-                        <span className="text-muted-foreground">{count === 1 ? 'submission' : 'submissions'}</span>
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+            <li
+              key={form.id}
+              className="relative flex flex-col gap-3 px-4 py-4 transition-colors focus-within:bg-muted/60 hover:bg-muted/60 sm:flex-row sm:items-center sm:gap-6 sm:px-5"
+            >
+              <div className="min-w-0 flex-1">
+                <Link
+                  href={`/dashboard/forms/${form.id}`}
+                  className="block truncate font-medium after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-ring"
+                >
+                  {form.name}
+                </Link>
+                <p className="truncate text-sm text-muted-foreground">{form.target_email}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:w-60">
+                <span className="inline-flex items-center gap-1.5">
+                  <Globe className="size-3.5" aria-hidden="true" />
+                  {domains === 0 ? 'Any website' : `${domains} ${domains === 1 ? 'domain' : 'domains'}`}
+                </span>
+                {form.enable_turnstile ? (
+                  <span className="inline-flex items-center gap-1.5 text-success">
+                    <ShieldCheck className="size-3.5" aria-hidden="true" /> Turnstile
+                  </span>
+                ) : null}
+              </div>
+              <div className="flex items-baseline justify-between gap-4 sm:w-44 sm:flex-col sm:items-end sm:gap-0.5">
+                <span className="text-sm tabular-nums">
+                  <span className="font-semibold">{count.toLocaleString('en-US')}</span>{' '}
+                  <span className="text-muted-foreground">{count === 1 ? 'submission' : 'submissions'}</span>
+                </span>
+                <span className="text-xs text-muted-foreground">Created {formatDateUtc(form.created_at)}</span>
+              </div>
             </li>
           );
         })}

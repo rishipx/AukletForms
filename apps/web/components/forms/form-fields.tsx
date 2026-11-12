@@ -28,7 +28,7 @@ function Field({ id, label, hint, error, children }: { id: string; label: string
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <fieldset className="flex flex-col gap-4">
-      <legend className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{title}</legend>
+      <legend className="mb-2 text-sm font-semibold text-foreground">{title}</legend>
       {children}
     </fieldset>
   );

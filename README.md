@@ -36,6 +36,19 @@ Built to run entirely on free tiers: Cloudflare Workers, Supabase, Resend and Do
 - **Operations:** daily email caps, plan-based data retention, a daily maintenance cron, and a weekly encrypted database backup workflow.
 - **Self-host edition:** a single-file, database-free Worker under AGPL-3.0 with a one-click **Deploy to Cloudflare** button ([`apps/selfhost-worker`](./apps/selfhost-worker)).
 
+## Screenshots
+
+<p align="center">
+  <img src="./docs/screenshots/01-login.png" alt="Sign-in page" width="49%">
+  <img src="./docs/screenshots/02-check-your-inbox.png" alt="Check your inbox confirmation" width="49%">
+</p>
+<p align="center">
+  <img src="./docs/screenshots/03-empty-dashboard.png" alt="Empty dashboard with the create-your-first-form prompt" width="49%">
+  <img src="./docs/screenshots/04-create-form.png" alt="New form dialog" width="49%">
+</p>
+
+The forms list, live submissions and billing screens are at the top of this page.
+
 ## How it works
 
 ```mermaid
