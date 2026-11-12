@@ -13,7 +13,7 @@ import { formatDateTime } from '@/lib/utils';
 function Meta({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</dt>
+      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
       <dd className="break-all text-sm">{children}</dd>
     </div>
   );
@@ -86,7 +86,7 @@ export function SubmissionSheet({ submission, onClose, onDelete }: SubmissionShe
 
             <div className="flex min-h-0 flex-1 flex-col gap-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Raw payload</h3>
+                <h3 className="text-xs font-medium text-muted-foreground">Raw payload</h3>
                 <CopyButton text={json} label="Copy JSON" />
               </div>
               <pre

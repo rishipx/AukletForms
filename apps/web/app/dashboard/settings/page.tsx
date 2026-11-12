@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
 import { BillingButton } from '@/components/billing/billing-button';
 import { DeleteAccount } from '@/components/account/delete-account';
 import { PlanCard } from '@/components/billing/plan-card';
+import { PageHeader } from '@/components/shared/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PLAN_LABELS, productMapFromEnv, type PaidPlan } from '@/lib/billing/plans';
@@ -57,15 +56,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <Link href="/dashboard" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ChevronLeft className="size-4" /> All forms
-        </Link>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Billing</h1>
-          <p className="text-sm text-muted-foreground">{profile.email}</p>
-        </div>
-      </div>
+      <PageHeader title="Billing" description={profile.email} />
 
       {checkout === 'success' ? (
         <p role="status" className="rounded-lg border border-success/40 bg-success/10 p-4 text-sm">
@@ -109,8 +100,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         </p>
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold tracking-tight text-destructive">Delete account</h2>
+      <section className="flex flex-col gap-3 border-t pt-8">
+        <h2 className="text-lg font-semibold tracking-tight">Delete account</h2>
         <p className="text-sm text-muted-foreground">
           Permanently deletes your account, forms and every stored submission. This cannot be undone. Cancel any subscription first.
         </p>

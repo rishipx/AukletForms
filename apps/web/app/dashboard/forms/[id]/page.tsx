@@ -5,6 +5,7 @@ import { ChevronLeft } from 'lucide-react';
 import { FormSettingsPanel } from '@/components/forms/form-settings-panel';
 import { FormTabs, type FormTab } from '@/components/forms/form-tabs';
 import { IntegrationSnippets } from '@/components/forms/integration-snippets';
+import { PageHeader } from '@/components/shared/page-header';
 import { SubmissionsTable } from '@/components/submissions/submissions-table';
 import { formEndpoint } from '@/lib/config/env';
 import { createClient } from '@/lib/supabase/server';
@@ -57,15 +58,17 @@ export default async function FormPage({ params, searchParams }: { params: Promi
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link href="/dashboard" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ChevronLeft className="size-4" /> All forms
+        <Link href="/dashboard" className="inline-flex w-fit items-center gap-1 rounded text-sm text-muted-foreground hover:text-foreground">
+          <ChevronLeft className="size-4" aria-hidden="true" /> All forms
         </Link>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{form.name}</h1>
-          <p className="text-sm text-muted-foreground">
-            Submissions are emailed to <span className="font-medium text-foreground">{form.target_email}</span>
-          </p>
-        </div>
+        <PageHeader
+          title={form.name}
+          description={
+            <>
+              Submissions are emailed to <span className="font-medium text-foreground">{form.target_email}</span>
+            </>
+          }
+        />
       </div>
 
       <FormTabs

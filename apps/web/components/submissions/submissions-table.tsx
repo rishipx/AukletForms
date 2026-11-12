@@ -26,6 +26,8 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
   const [live, setLive] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  // Ids of rows that arrived live; they get a brief highlight.
+  const [fresh, setFresh] = useState<ReadonlySet<string>>(new Set());
 
   // Live updates: new submissions appear at the top without a refresh.
   // Realtime evaluates the table's RLS policy, so only this user's rows arrive.
@@ -46,6 +48,7 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
           const row = payload.new as SubmissionRecord;
           setRows((prev) => (prev.some((r) => r.id === row.id) ? prev : [row, ...prev]));
           setTotal((t) => t + 1);
+          setFresh((prev) => new Set(prev).add(row.id));
         })
         // The Worker records the email outcome (sent / failed) a moment after the insert.
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `form_id=eq.${formId}` }, (payload) => {
@@ -112,7 +115,7 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
             className="inline-flex items-center gap-1.5"
             title={live ? 'New submissions appear here automatically' : 'Live updates are connecting or unavailable'}
           >
-            <span className={cn('size-2 rounded-full', live ? 'bg-success' : 'bg-muted-foreground/40')} aria-hidden="true" />
+            <span className={cn('size-2 rounded-full', live ? 'animate-live-pulse bg-signal' : 'bg-muted-foreground/40')} aria-hidden="true" />
             {live ? 'Live' : 'Offline'}
           </span>
         </div>
@@ -124,18 +127,18 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
       </div>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <Inbox className="size-8 text-muted-foreground" />
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed bg-card py-16 text-center">
+          <Inbox className="size-7 text-muted-foreground" aria-hidden="true" />
           <p className="font-medium">No submissions yet</p>
           <p className="max-w-xs text-sm text-muted-foreground">Send a test from the Integration tab. It will show up here the moment it arrives.</p>
         </div>
       ) : (
-        <div className="rounded-xl border bg-card">
+        <div className="overflow-hidden rounded-xl border bg-card">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-48">Timestamp</TableHead>
-                <TableHead>Key fields</TableHead>
+              <TableRow className="bg-muted/40 hover:bg-transparent">
+                <TableHead className="w-48">Received</TableHead>
+                <TableHead>Fields</TableHead>
                 <TableHead className="w-32">Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -155,7 +158,10 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
                         setSelected(row);
                       }
                     }}
-                    className="cursor-pointer hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-none"
+                    className={cn(
+                      'cursor-pointer hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-none',
+                      fresh.has(row.id) && 'animate-fresh',
+                    )}
                   >
                     <TableCell className="whitespace-nowrap text-muted-foreground">
                       <time dateTime={row.created_at} suppressHydrationWarning>
@@ -169,7 +175,7 @@ export function SubmissionsTable({ formId, initialRows, initialTotal }: Submissi
                         <div className="flex flex-col gap-0.5">
                           {summary.map((f) => (
                             <span key={f.key} className="max-w-xl truncate">
-                              <span className="font-medium">{f.key}:</span> <span className="text-muted-foreground">{f.value}</span>
+                              <span className="mr-1.5 text-muted-foreground">{f.key}</span> <span className="font-medium">{f.value}</span>
                             </span>
                           ))}
                         </div>

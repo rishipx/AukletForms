@@ -29,7 +29,7 @@ function CreateFormBody() {
           {state.message}
         </p>
       ) : null}
-      <div className="flex justify-end gap-2">
+      <div className="sticky -bottom-6 -mx-6 -mb-6 flex justify-end gap-2 border-t bg-card px-6 py-4">
         <DialogClose asChild>
           <Button type="button" variant="ghost">
             Cancel
@@ -54,7 +54,7 @@ export function CreateFormDialog({ children }: { children?: ReactNode }) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Form</DialogTitle>
+          <DialogTitle>New form</DialogTitle>
           <DialogDescription>You&apos;ll get a unique endpoint to point your HTML form or fetch call at.</DialogDescription>
         </DialogHeader>
         {/* Mounted only while open so every opening starts with fresh state. */}

@@ -18,7 +18,7 @@ const PLAN_FEATURES: Record<PlanTier, string[]> = {
 
 export function PlanCard({ tier, current, upgrade }: { tier: PlanTier; current: boolean; upgrade: ReactNode }) {
   return (
-    <Card className={current ? 'border-ring' : undefined}>
+    <Card className={current ? 'border-primary ring-1 ring-primary' : undefined}>
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-lg">{PLAN_LABELS[tier]}</CardTitle>
@@ -32,7 +32,7 @@ export function PlanCard({ tier, current, upgrade }: { tier: PlanTier; current: 
         <ul className="flex flex-col gap-2 text-sm">
           {PLAN_FEATURES[tier].map((feature) => (
             <li key={feature} className="flex items-start gap-2">
-              <Check className="mt-0.5 size-4 shrink-0 text-success" /> {feature}
+              <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" /> {feature}
             </li>
           ))}
         </ul>
